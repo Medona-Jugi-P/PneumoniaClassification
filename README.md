@@ -20,6 +20,10 @@ The project follows these steps:
 4. **Image Preprocessing and Prediction**: The uploaded image is preprocessed and passed through the CNN model for prediction.
 5. **Display Predictions**: The application displays the prediction result on the web interface.
 
+## Deployment
+
+The project is deployed and accessible at: [Pneumonia Classification Web App](https://pneumoniaclassification.onrender.com)
+
 ## Conclusion
 
 The developed application provides an accessible and user-friendly way for medical professionals and users to quickly assess chest X-ray images for pneumonia. By leveraging deep learning techniques and web technologies, this project demonstrates the potential of AI-driven tools in medical diagnosis. The application can aid in identifying pneumonia cases earlier, potentially leading to faster medical interventions and improved patient outcomes.

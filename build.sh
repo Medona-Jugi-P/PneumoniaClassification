@@ -6,4 +6,4 @@ set -o errexit
 pip install --upgrade pip
 
 # Install Python dependencies from requirements.txt
-pip install -r requirements.txt
+pip install -r requirement.txt

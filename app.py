@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jun 26 19:09:53 2023
-@author: CC
-"""
-
 from flask import Flask, render_template, request
 from PIL import Image
 import numpy as np
 import tensorflow as tf
 
-app = Flask(__name__, template_folder="templates")
+# Constants
+IMAGE_SIZE = (256, 256)
+NORMALIZATION_FACTOR = 255.0
+
+app = Flask(__name__)
 
 # Load the trained CNN model
 model = tf.keras.models.load_model("pneumonia_trained_model.h5")
@@ -17,28 +15,28 @@ model = tf.keras.models.load_model("pneumonia_trained_model.h5")
 # Define the labels
 labels = ['NORMAL', 'PNEUMONIA']
 
+class Config:
+    TEMPLATE_FOLDER = "templates"
+    DEBUG = True
+
+app.config.from_object(Config)
+
+def process_uploaded_image(image_file):
+    try:
+        image = Image.open(image_file)
+        return image
+    except Exception as e:
+        app.logger.error(f"Error processing image: {e}")
+        return None
 
 def preprocess_image(image):
-    # Convert the image to grayscale
     grayscale_image = image.convert('L')
-
-    # Convert the grayscale image to RGB
     rgb_image = grayscale_image.convert('RGB')
-
-    # Resize the image to (256, 256)
-    resized_image = rgb_image.resize((256, 256))
-
-    # Convert the image to a numpy array
+    resized_image = rgb_image.resize(IMAGE_SIZE)
     image_array = np.array(resized_image)
-
-    # Normalize the image array
-    normalized_image = image_array / 255.0
-
-    # Add an extra dimension to match the expected shape
+    normalized_image = image_array / NORMALIZATION_FACTOR
     preprocessed_image = np.expand_dims(normalized_image, axis=0)
-
     return preprocessed_image
-
 
 def predict_pneumonia(image):
     preprocessed_image = preprocess_image(image)
@@ -47,28 +45,22 @@ def predict_pneumonia(image):
     predicted_label = labels[predicted_class]
     return predicted_label
 
-
 @app.route('/')
 def home():
     return render_template('index.html')
 
-
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get the uploaded image file from the request
-    image_file = request.files['file']
-    if image_file:
-        # Read the image using PIL
-        image = Image.open(image_file)
-
-        # Perform prediction
-        predicted_label = predict_pneumonia(image)
-
-        # Render the prediction result
-        return render_template('result.html', label=predicted_label)
-    else:
+    image_file = request.files.get('file')
+    if not image_file:
         return "No image file uploaded."
 
+    image = process_uploaded_image(image_file)
+    if not image:
+        return "Error processing image."
+
+    predicted_label = predict_pneumonia(image)
+    return render_template('result.html', label=predicted_label)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=app.config['DEBUG'])

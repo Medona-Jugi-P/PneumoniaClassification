@@ -2,12 +2,67 @@
 <html>
 <head>
     <title>Pneumonia Detection</title>
+    <style>
+        body {
+            text-align: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            display: inline-block;
+            text-align: center; /* Center the form content */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            background-color: #f8f8f8;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #007BFF;
+        }
+
+        .instructions {
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        input[type="file"] {
+            margin: 10px auto; /* Center the Choose File button */
+            display: block; /* Display as a block element for margin auto to work */
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto; /* Center the Submit button */
+            display: block; /* Display as a block element for margin auto to work */
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <h1>Pneumonia Detection</h1>
     <form action="/predict" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*">
+        <p class="instructions">Upload an X-ray image to see if it indicates pneumonia.</p>
+        <input type="file" name="file" accept="image/*" placeholder="Select an image">
         <input type="submit" value="Predict">
     </form>
+    <div class="result">
+        {% if label %}
+            Prediction: {{ label }}
+        {% endif %}
+    </div>
 </body>
 </html>

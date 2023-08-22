@@ -2,9 +2,49 @@
 <html>
 <head>
     <title>Pneumonia Detection Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            padding: 20px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-    <h1>Pneumonia Detection Result</h1>
-    <p>Prediction: {{ label }}</p>
+    <div class="container">
+        <h1>Pneumonia Detection Result</h1>
+        <p>Prediction: {{ label }}</p>
+        <button id="reloadButton">Try Another Image</button>
+    </div>
+    <script>
+        const reloadButton = document.getElementById('reloadButton');
+        const imageContainer = document.getElementById('imageContainer');
+        const uploadedImage = document.getElementById('uploadedImage');
+
+        reloadButton.addEventListener('click', () => {
+            window.location.href = '/';
+        });
+
+        const imageUrl = '{{ uploaded_image_url }}';
+        if (imageUrl) {
+            imageContainer.style.display = 'block';
+            uploadedImage.src = imageUrl;
+        }
+    </script>
 </body>
 </html>
